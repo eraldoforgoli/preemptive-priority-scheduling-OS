@@ -53,7 +53,7 @@ public class InputController {
 
 		}
 
-		while (in.next().equals("n") || in.next().equals("N"));
+		while (!(in.nextLine().equals("Y") || in.nextLine().equals("y")));
 
 		return allProcesses;
 
