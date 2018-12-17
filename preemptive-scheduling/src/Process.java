@@ -1,7 +1,6 @@
 
 public class Process {
 
-	// cdo proces ka keto karakteristika, te perkthyera ne variabla
 	private int processNumber;
 	private int processPriority;
 	private int arrivingTime;

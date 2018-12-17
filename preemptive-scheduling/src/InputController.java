@@ -29,14 +29,14 @@ public class InputController {
 			System.out.println("Enter the process Priority:  ");
 
 			while (!in.hasNextInt()) {
-				System.out.println("Wrong input, enter the value again!");
+				System.out.println("Wrong input, enter the Priority again as integer!");
 				in.next();
 			}
 			processPriority = in.nextInt();
 
 			System.out.println("Enter the process Arriving Time:   ");
 			while (!in.hasNextInt()) {
-				System.out.println("Wrong input, enter the value again!");
+				System.out.println("Wrong input, enter the Arriving Time again as integer!");
 				in.next();
 			}
 			processArrivingTime = in.nextInt();
@@ -44,7 +44,7 @@ public class InputController {
 			System.out.println("Enter the process Burst Time:  ");
 			while (!in.hasNextInt()) {
 				in.next();
-				System.out.println("Wrong input, enter the value again!");
+				System.out.println("Wrong input, enter the Burst Time again as integer!");
 			}
 			processBurstTime = in.nextInt();
 

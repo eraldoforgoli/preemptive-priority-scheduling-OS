@@ -1,41 +1,140 @@
 import java.util.ArrayList;
-
-/* 
- Explanation about Preemptive Priority Scheduling 
-In Preemptive Priority Scheduling, at the time of arrival of a process in the ready queue, its Priority is compared with the priority
-of the other processes present in the ready queue as well as with the one which is being executed by the CPU at that point of time.
-The One with the highest priority among all the available processes will be given the CPU next.
-In the preemptive priority scheduling, the job which is being executed can be stopped at the arrival of a higher priority job.
-Once all the jobs get available in the ready queue, the algorithm will behave as non-preemptive priority scheduling, which means the
- job scheduled will run till the completion and no preemption will be done.  	
-  
- */
+import java.util.Collection;
+import java.util.Collections;
 
 public class PreemptiveSchedulingLogic {
 
-	public static void main(String[] args) {
+	// ArrayList that order of the process execution
+	private ArrayList<ScheduledProcess> scheduledProcesses;
+	int currentTime;
+	int exeTime;
 
-		InputController inputController = new InputController();
-		ProcessScheduleCalculator processScheduleCalculator = new ProcessScheduleCalculator();
-		ArrayList<Process> allProcesses = null;
-		ArrayList<ScheduledProcess> scheduledProcesses = null;
+	public PreemptiveSchedulingLogic() {
+		scheduledProcesses = new ArrayList<ScheduledProcess>();
+		currentTime = 0;
+		exeTime = 0;
+	}
 
-		allProcesses = inputController.getAllProcesses();
-		System.out.println("Pr  AT  BT");
-		for(Process process: allProcesses) {
-			System.out.println(process.getProcessPriority() + "   "+ process.getArrivingTime() + "   " + process.getBurstTime());
+	public ArrayList<ScheduledProcess> calculateProcessSchedule(ArrayList<Process> allProcesses) {
+
+		// get the first arriving process
+		Process process = this.getFirstArrivingProcess(allProcesses);
+		Process nextProcess = this.getNextProcess(allProcesses, process.getArrivingTime());
+
+		Process currentProcess = process;
+
+		while (allProcesses.size() > 0) {
+
+			Process nextHigherPriorityProcess = this.getNextHigherPriorityProcess(allProcesses, process);
+
+			exeTime = nextHigherPriorityProcess.getArrivingTime() - currentTime;
+
+			if (exeTime >= process.getBurstTime()) {
+
+				process.setBurstTime(exeTime - process.getBurstTime());
+
+				// delete this line
+				System.out.println(process.getProcessNumber());
+
+				scheduledProcesses.add(new ScheduledProcess(process.getProcessNumber(), process.getBurstTime()));
+				allProcesses.remove(process.getProcessNumber() - 1);
+
+				process = this.getNextProcess(allProcesses, process.getProcessNumber());
+				// process = this.getNextProcessAfterCurrentProcess(allProcesses,
+				// process.getArrivingTime(),
+				// nextHigherPriorityProcess.getArrivingTime());
+
+			} else if (exeTime < process.getBurstTime()) {
+				process.setBurstTime(process.getBurstTime() - exeTime);
+				// delete this line
+				System.out.println(process.getProcessNumber());
+
+				scheduledProcesses.add(new ScheduledProcess(process.getProcessNumber(), exeTime));
+
+				// get the next process to execute
+				process = this.getNextProcess(allProcesses, process.getProcessNumber());
+
+				// process = this.getNextProcessAfterCurrentProcess(allProcesses,
+				// process.getArrivingTime(),
+				// nextHigherPriorityProcess.getArrivingTime());
+			}
+			/*
+			 * else if (exeTime == process.getBurstTime()) {
+			 * 
+			 * // delete this line System.out.println(process.getProcessNumber());
+			 * 
+			 * scheduledProcesses.add(new ScheduledProcess(process.getProcessNumber(),
+			 * exeTime)); allProcesses.remove(process.getProcessNumber() - 1); process =
+			 * this.getNextProcess(allProcesses, process.getProcessNumber()); }
+			 */ else { // behavior same as non-preemptive scheduling
+						// delete this line
+				System.out.println("breaaak");
+
+				break;
+			}
+			if (process.getProcessNumber() == this.getMaximumPriorityProcess(allProcesses).getProcessNumber()) {
+				System.out.println("breaaak");
+
+				break;
+			}
+			currentTime += exeTime;
+
+			// Process nextHigherPriorityProcess =
+			// this.getNextHigherPriorityProcess(allProcesses, currentProcess);
+
+		}
+		return scheduledProcesses;
+
+	}
+
+	public Process getNextProcess(ArrayList<Process> allProcesses, int actualArrivingTime) {
+		return allProcesses.get(actualArrivingTime + 1);
+	}
+
+	public Process getMaximumPriorityProcess(ArrayList<Process> allProcesses) {
+		int max = Integer.MIN_VALUE;
+		Process maxPriorityProcess = null;
+		for (int i = 0; i < allProcesses.size(); i++) {
+			if (allProcesses.get(i).getProcessPriority() > max) {
+				max = allProcesses.get(i).getProcessPriority();
+				maxPriorityProcess = allProcesses.get(i);
+			}
+		}
+		return maxPriorityProcess;
+	}
+
+	public Process getNextHigherPriorityProcess(ArrayList<Process> allProcesses, Process process) {
+		for (int i = 0; i < allProcesses.size(); i++) {
+			if (process.getArrivingTime() < allProcesses.get(i).getArrivingTime()
+					&& process.getProcessPriority() <= allProcesses.get(i).getProcessPriority()) {
+				return allProcesses.get(i);
+			}
 		}
 
-		scheduledProcesses = processScheduleCalculator.calculateProcessSchedule(allProcesses);
-		
-		for(ScheduledProcess sp : scheduledProcesses) {
-			System.out.println(sp.getProcessNumber());
+		return null;
+
+	}
+
+	public Process getFirstArrivingProcess(ArrayList<Process> allProcesses) {
+		int min = Integer.MAX_VALUE;
+		Process minArrivingTimeProcess = null;
+		for (int i = 0; i < allProcesses.size(); i++) {
+			if (allProcesses.get(i).getArrivingTime() < min) {
+				min = allProcesses.get(i).getArrivingTime();
+				minArrivingTimeProcess = allProcesses.get(i);
+			}
 		}
+		return minArrivingTimeProcess;
+	}
 
-		// gjej kohen e pritjes
-
-		// gjej kohen e qendrimit
-
+	public Process getNextProcessAfterCurrentProcess(ArrayList<Process> allProcesses, int startTime, int endTime) {
+		for (int i = 0; i < allProcesses.size(); i++) {
+			Process p = allProcesses.get(i);
+			if (p.getArrivingTime() > startTime && p.getArrivingTime() <= endTime) {
+				return p;
+			}
+		}
+		return null;
 	}
 
 }
