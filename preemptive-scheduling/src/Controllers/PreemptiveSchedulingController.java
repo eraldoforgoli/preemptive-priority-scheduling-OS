@@ -1,4 +1,8 @@
+package Controllers;
+
 import java.util.ArrayList;
+import Models.ScheduledProcess;
+import Models.Process;
 
 /* 
  Explanation about Preemptive Priority Scheduling 
@@ -19,9 +23,9 @@ public class PreemptiveSchedulingController {
 
 		InputController inputController = new InputController();
 		PreemptiveSchedulingLogic preemptiveSchedulingLogic = new PreemptiveSchedulingLogic();
-		ArrayList<Process> allProcesses = null;
-		ArrayList<ScheduledProcess> scheduledProcesses = null;
-		ArrayList<ScheduledProcess> complitionTimes = null;
+		ArrayList<Process> allProcesses = new ArrayList<Process>();
+		ArrayList<ScheduledProcess> scheduledProcesses = new ArrayList<ScheduledProcess>();
+		ArrayList<ScheduledProcess> complitionTimes = new ArrayList<ScheduledProcess>();
 
 		allProcesses = inputController.getAllProcesses();
 		System.out.println("Pr  AT  BT");
@@ -44,9 +48,9 @@ public class PreemptiveSchedulingController {
 			System.out.print(sp.getExeTime() + "  ");
 		}
 
-		// get the process completion time 
+		// get the process completion time
 		complitionTimes = preemptiveSchedulingLogic.getCompletionTimes(allProcesses, scheduledProcesses);
-		
+
 		System.out.println("\nCompletion time: ");
 		for (ScheduledProcess times : complitionTimes) {
 			System.out.print(times.getExeTime() + "  ");

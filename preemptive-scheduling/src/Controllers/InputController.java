@@ -1,5 +1,8 @@
+package Controllers;
+
 import java.util.ArrayList;
 import java.util.Scanner;
+import Models.Process;
 
 public class InputController {
 
@@ -10,7 +13,6 @@ public class InputController {
 	private int processBurstTime;
 	private Scanner in;
 
-	// konstruktor
 	public InputController() {
 		allProcesses = new ArrayList<Process>();
 		processNumber = 0;

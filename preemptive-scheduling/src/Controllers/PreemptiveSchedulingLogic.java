@@ -1,6 +1,10 @@
+package Controllers;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import Models.Process;
+import Models.ScheduledProcess;
 
 public class PreemptiveSchedulingLogic {
 
@@ -25,13 +29,12 @@ public class PreemptiveSchedulingLogic {
 
 		Process nextProcess = this.getNextProcess(allProcesses, process.getArrivingTime());
 
-
 		while (allProcesses.size() > 0 && nextProcess != null) {
 
 			nextHigherPriorityProcess = this.getNextHigherPriorityProcess(allProcesses, process);
 
 			exeTime = nextHigherPriorityProcess.getArrivingTime() - currentTime;
-			totatExecutionTime +=exeTime;
+			totatExecutionTime += exeTime;
 
 			if (currentTime == nextHigherPriorityProcess.getArrivingTime()) {
 				process = nextHigherPriorityProcess;
@@ -39,7 +42,8 @@ public class PreemptiveSchedulingLogic {
 
 			if (exeTime >= process.getBurstTime()) {
 				totatExecutionTime += process.getBurstTime();
-				ScheduledProcess scheduledProceess = new ScheduledProcess(process.getProcessNumber(), totatExecutionTime);
+				ScheduledProcess scheduledProceess = new ScheduledProcess(process.getProcessNumber(),
+						totatExecutionTime);
 				scheduledProcesses.add(scheduledProceess);
 				allProcesses.remove(process);
 
@@ -49,19 +53,19 @@ public class PreemptiveSchedulingLogic {
 
 			} else {
 				process.setBurstTime(process.getBurstTime() - exeTime);
-		
+
 				scheduledProcesses.add(new ScheduledProcess(process.getProcessNumber(), totatExecutionTime));
 
 				// get the next process to execute
 				process = this.getNextHigherPriorityProcess(allProcesses, process);
 				// process = this.getNextProcess(allProcesses, process.getArrivingTime());
-				
+
 				if (process == null)
 					break;
 			}
-			
+
 			/* Behavior same as non-preemptive scheduling */
-			if (process.getProcessPriority() == this.getMaximumPriorityProcess(allProcesses).getProcessPriority()) {  
+			if (process.getProcessPriority() == this.getMaximumPriorityProcess(allProcesses).getProcessPriority()) {
 				scheduledProcesses = this.processEachMaximum(allProcesses, scheduledProcesses, exeTime);
 				break;
 			}
@@ -134,21 +138,22 @@ public class PreemptiveSchedulingLogic {
 		return scheduledProcesses;
 
 	}
-	
-	public ArrayList<ScheduledProcess> getCompletionTimes(ArrayList<Process> allProcesses, ArrayList<ScheduledProcess> scheduledProcesses){
-		
-		 ArrayList<ScheduledProcess> scheduledProcessTime = new ArrayList<ScheduledProcess>();
-		 
-		for(Process p: allProcesses) {
+
+	public ArrayList<ScheduledProcess> getCompletionTimes(ArrayList<Process> allProcesses,
+			ArrayList<ScheduledProcess> scheduledProcesses) {
+
+		ArrayList<ScheduledProcess> scheduledProcessTime = new ArrayList<ScheduledProcess>();
+
+		for (Process p : allProcesses) {
 			ScheduledProcess sp = null;
-			for(ScheduledProcess scheduledProcess : scheduledProcesses) {
-				if(scheduledProcess.getProcessNumber() == p.getProcessNumber()) {
+			for (ScheduledProcess scheduledProcess : scheduledProcesses) {
+				if (scheduledProcess.getProcessNumber() == p.getProcessNumber()) {
 					sp = scheduledProcess;
 				}
 			}
 			scheduledProcessTime.add(sp);
 		}
 		return scheduledProcessTime;
-		
+
 	}
 }
