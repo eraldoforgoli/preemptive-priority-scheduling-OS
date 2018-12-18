@@ -4,91 +4,78 @@ import java.util.Collections;
 
 public class PreemptiveSchedulingLogic {
 
-	// ArrayList that order of the process execution
 	private ArrayList<ScheduledProcess> scheduledProcesses;
 	int currentTime;
 	int exeTime;
+	Process nextHigherPriorityProcess;
+	int totatExecutionTime;
 
 	public PreemptiveSchedulingLogic() {
 		scheduledProcesses = new ArrayList<ScheduledProcess>();
 		currentTime = 0;
 		exeTime = 0;
+		totatExecutionTime = 0;
+		nextHigherPriorityProcess = null;
 	}
 
 	public ArrayList<ScheduledProcess> calculateProcessSchedule(ArrayList<Process> allProcesses) {
 
 		// get the first arriving process
 		Process process = this.getFirstArrivingProcess(allProcesses);
+
 		Process nextProcess = this.getNextProcess(allProcesses, process.getArrivingTime());
 
-		Process currentProcess = process;
 
-		while (allProcesses.size() > 0) {
+		while (allProcesses.size() > 0 && nextProcess != null) {
 
-			Process nextHigherPriorityProcess = this.getNextHigherPriorityProcess(allProcesses, process);
+			nextHigherPriorityProcess = this.getNextHigherPriorityProcess(allProcesses, process);
 
 			exeTime = nextHigherPriorityProcess.getArrivingTime() - currentTime;
+			totatExecutionTime +=exeTime;
+
+			if (currentTime == nextHigherPriorityProcess.getArrivingTime()) {
+				process = nextHigherPriorityProcess;
+			}
 
 			if (exeTime >= process.getBurstTime()) {
+				totatExecutionTime += process.getBurstTime();
+				ScheduledProcess scheduledProceess = new ScheduledProcess(process.getProcessNumber(), totatExecutionTime);
+				scheduledProcesses.add(scheduledProceess);
+				allProcesses.remove(process);
 
-				process.setBurstTime(exeTime - process.getBurstTime());
+				// process = this.getNextProcess(allProcesses, process.getProcessNumber());
+				process = this.getNextProcessAfterCurrentProcess(allProcesses, process.getArrivingTime(),
+						nextHigherPriorityProcess.getArrivingTime());
 
-				// delete this line
-				System.out.println(process.getProcessNumber());
-
-				scheduledProcesses.add(new ScheduledProcess(process.getProcessNumber(), process.getBurstTime()));
-				allProcesses.remove(process.getProcessNumber() - 1);
-
-				process = this.getNextProcess(allProcesses, process.getProcessNumber());
-				// process = this.getNextProcessAfterCurrentProcess(allProcesses,
-				// process.getArrivingTime(),
-				// nextHigherPriorityProcess.getArrivingTime());
-
-			} else if (exeTime < process.getBurstTime()) {
+			} else {
 				process.setBurstTime(process.getBurstTime() - exeTime);
-				// delete this line
-				System.out.println(process.getProcessNumber());
-
-				scheduledProcesses.add(new ScheduledProcess(process.getProcessNumber(), exeTime));
+		
+				scheduledProcesses.add(new ScheduledProcess(process.getProcessNumber(), totatExecutionTime));
 
 				// get the next process to execute
-				process = this.getNextProcess(allProcesses, process.getProcessNumber());
-
-				// process = this.getNextProcessAfterCurrentProcess(allProcesses,
-				// process.getArrivingTime(),
-				// nextHigherPriorityProcess.getArrivingTime());
+				process = this.getNextHigherPriorityProcess(allProcesses, process);
+				// process = this.getNextProcess(allProcesses, process.getArrivingTime());
+				
+				if (process == null)
+					break;
 			}
-			/*
-			 * else if (exeTime == process.getBurstTime()) {
-			 * 
-			 * // delete this line System.out.println(process.getProcessNumber());
-			 * 
-			 * scheduledProcesses.add(new ScheduledProcess(process.getProcessNumber(),
-			 * exeTime)); allProcesses.remove(process.getProcessNumber() - 1); process =
-			 * this.getNextProcess(allProcesses, process.getProcessNumber()); }
-			 */ else { // behavior same as non-preemptive scheduling
-						// delete this line
-				System.out.println("breaaak");
-
+			
+			/* Behavior same as non-preemptive scheduling */
+			if (process.getProcessPriority() == this.getMaximumPriorityProcess(allProcesses).getProcessPriority()) {  
+				scheduledProcesses = this.processEachMaximum(allProcesses, scheduledProcesses, exeTime);
 				break;
 			}
-			if (process.getProcessNumber() == this.getMaximumPriorityProcess(allProcesses).getProcessNumber()) {
-				System.out.println("breaaak");
 
-				break;
-			}
 			currentTime += exeTime;
-
-			// Process nextHigherPriorityProcess =
-			// this.getNextHigherPriorityProcess(allProcesses, currentProcess);
 
 		}
 		return scheduledProcesses;
-
 	}
 
-	public Process getNextProcess(ArrayList<Process> allProcesses, int actualArrivingTime) {
-		return allProcesses.get(actualArrivingTime + 1);
+	public Process getNextProcess(ArrayList<Process> allProcesses, int position) {
+		if (position + 1 <= allProcesses.size() - 1)
+			return allProcesses.get(position + 1);
+		return null;
 	}
 
 	public Process getMaximumPriorityProcess(ArrayList<Process> allProcesses) {
@@ -110,9 +97,7 @@ public class PreemptiveSchedulingLogic {
 				return allProcesses.get(i);
 			}
 		}
-
-		return null;
-
+		return process;
 	}
 
 	public Process getFirstArrivingProcess(ArrayList<Process> allProcesses) {
@@ -137,4 +122,33 @@ public class PreemptiveSchedulingLogic {
 		return null;
 	}
 
+	public ArrayList<ScheduledProcess> processEachMaximum(ArrayList<Process> allProcesses,
+			ArrayList<ScheduledProcess> scheduledProcesses, int exeTime) {
+
+		while (allProcesses.size() > 0) {
+			Process maxProcess = this.getMaximumPriorityProcess(allProcesses);
+			exeTime += maxProcess.getBurstTime();
+			scheduledProcesses.add(new ScheduledProcess(maxProcess.getProcessNumber(), exeTime));
+			allProcesses.remove(maxProcess);
+		}
+		return scheduledProcesses;
+
+	}
+	
+	public ArrayList<ScheduledProcess> getCompletionTimes(ArrayList<Process> allProcesses, ArrayList<ScheduledProcess> scheduledProcesses){
+		
+		 ArrayList<ScheduledProcess> scheduledProcessTime = new ArrayList<ScheduledProcess>();
+		 
+		for(Process p: allProcesses) {
+			ScheduledProcess sp = null;
+			for(ScheduledProcess scheduledProcess : scheduledProcesses) {
+				if(scheduledProcess.getProcessNumber() == p.getProcessNumber()) {
+					sp = scheduledProcess;
+				}
+			}
+			scheduledProcessTime.add(sp);
+		}
+		return scheduledProcessTime;
+		
+	}
 }

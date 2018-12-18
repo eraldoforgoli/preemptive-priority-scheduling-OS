@@ -21,6 +21,7 @@ public class PreemptiveSchedulingController {
 		PreemptiveSchedulingLogic preemptiveSchedulingLogic = new PreemptiveSchedulingLogic();
 		ArrayList<Process> allProcesses = null;
 		ArrayList<ScheduledProcess> scheduledProcesses = null;
+		ArrayList<ScheduledProcess> complitionTimes = null;
 
 		allProcesses = inputController.getAllProcesses();
 		System.out.println("Pr  AT  BT");
@@ -31,11 +32,25 @@ public class PreemptiveSchedulingController {
 
 		scheduledProcesses = preemptiveSchedulingLogic.calculateProcessSchedule(allProcesses);
 
+		System.out.println("Process execution order : ");
+
 		for (ScheduledProcess sp : scheduledProcesses) {
-			System.out.println(sp.getProcessNumber());
+			System.out.print(sp.getProcessNumber() + "  ");
+
 		}
 
-		// gjej kohen e pritjes
+		System.out.println("\nProcess execution time: ");
+		for (ScheduledProcess sp : scheduledProcesses) {
+			System.out.print(sp.getExeTime() + "  ");
+		}
+
+		// get the process completion time 
+		complitionTimes = preemptiveSchedulingLogic.getCompletionTimes(allProcesses, scheduledProcesses);
+		
+		System.out.println("\nCompletion time: ");
+		for (ScheduledProcess times : complitionTimes) {
+			System.out.print(times.getExeTime() + "  ");
+		}
 
 		// gjej kohen e qendrimit
 
