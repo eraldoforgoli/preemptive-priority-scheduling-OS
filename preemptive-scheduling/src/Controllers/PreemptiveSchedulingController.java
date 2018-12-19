@@ -26,6 +26,8 @@ public class PreemptiveSchedulingController {
 		ArrayList<Process> allProcesses = new ArrayList<Process>();
 		ArrayList<ScheduledProcess> scheduledProcesses = new ArrayList<ScheduledProcess>();
 		ArrayList<ScheduledProcess> complitionTimes = new ArrayList<ScheduledProcess>();
+		ArrayList<ScheduledProcess> turnAroundTimes = new ArrayList<ScheduledProcess>();
+		ArrayList<ScheduledProcess> waitingTimes = new ArrayList<ScheduledProcess>();
 
 		allProcesses = inputController.getAllProcesses();
 		System.out.println("Pr  AT  BT");
@@ -34,6 +36,7 @@ public class PreemptiveSchedulingController {
 					process.getProcessPriority() + "   " + process.getArrivingTime() + "   " + process.getBurstTime());
 		}
 
+		ArrayList<Process> allProcessesCopy = new ArrayList<Process>(allProcesses);
 		scheduledProcesses = preemptiveSchedulingLogic.calculateProcessSchedule(allProcesses);
 
 		System.out.println("Process execution order : ");
@@ -45,18 +48,32 @@ public class PreemptiveSchedulingController {
 
 		System.out.println("\nProcess execution time: ");
 		for (ScheduledProcess sp : scheduledProcesses) {
-			System.out.print(sp.getExeTime() + "  ");
+			System.out.print("P" + sp.getProcessNumber() + ":  " + sp.getExeTime() + "  ");
 		}
 
 		// get the process completion time
-		complitionTimes = preemptiveSchedulingLogic.getCompletionTimes(allProcesses, scheduledProcesses);
+		complitionTimes = preemptiveSchedulingLogic.getCompletionTimes(allProcessesCopy, scheduledProcesses);
 
 		System.out.println("\nCompletion time: ");
 		for (ScheduledProcess times : complitionTimes) {
-			System.out.print(times.getExeTime() + "  ");
+			System.out.println("P" + times.getProcessNumber() + "  " + times.getExeTime() + "  ");
 		}
 
-		// gjej kohen e qendrimit
+		// get Turn Around Time
+		turnAroundTimes = preemptiveSchedulingLogic.getTurnAroundTimes(allProcessesCopy, complitionTimes);
+		System.out.println("Turn Around Times: ");
+		for (ScheduledProcess times : turnAroundTimes) {
+			System.out.println("P" + times.getProcessNumber() + "  " + times.getExeTime() + "  ");
+		}
+
+		// get Waiting Times
+
+		waitingTimes = preemptiveSchedulingLogic.getWaitingTimes(allProcessesCopy, turnAroundTimes);
+
+		System.out.println("Waiting  Times: ");
+		for (ScheduledProcess waitingTime : waitingTimes) {
+			System.out.println("P" + waitingTime.getProcessNumber() + "  " + waitingTime.getExeTime() + "  ");
+		}
 
 	}
 

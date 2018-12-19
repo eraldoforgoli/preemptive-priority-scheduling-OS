@@ -51,7 +51,7 @@ public class InputController {
 			processBurstTime = in.nextInt();
 
 			allProcesses.add(new Process(++processNumber, processPriority, processArrivingTime, processBurstTime));
-			System.out.println("Do You want to finish entering the processes? (Y/N)");
+			System.out.println("Do You want to finish entering the processes? (y/n)");
 
 		}
 

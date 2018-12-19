@@ -1,8 +1,6 @@
 package Controllers;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import Models.Process;
 import Models.ScheduledProcess;
 
@@ -41,7 +39,7 @@ public class PreemptiveSchedulingLogic {
 			}
 
 			if (exeTime >= process.getBurstTime()) {
-				totatExecutionTime += process.getBurstTime();
+				// totatExecutionTime += process.getBurstTime();
 				ScheduledProcess scheduledProceess = new ScheduledProcess(process.getProcessNumber(),
 						totatExecutionTime);
 				scheduledProcesses.add(scheduledProceess);
@@ -66,7 +64,7 @@ public class PreemptiveSchedulingLogic {
 
 			/* Behavior same as non-preemptive scheduling */
 			if (process.getProcessPriority() == this.getMaximumPriorityProcess(allProcesses).getProcessPriority()) {
-				scheduledProcesses = this.processEachMaximum(allProcesses, scheduledProcesses, exeTime);
+				scheduledProcesses = this.processEachMaximum(allProcesses, scheduledProcesses, totatExecutionTime);
 				break;
 			}
 
@@ -156,4 +154,34 @@ public class PreemptiveSchedulingLogic {
 		return scheduledProcessTime;
 
 	}
+
+	// TurnAroundTime = CompletionTime - ArrivingTime
+	public ArrayList<ScheduledProcess> getTurnAroundTimes(ArrayList<Process> allProcesses,
+			ArrayList<ScheduledProcess> completionTimes) {
+
+		ArrayList<ScheduledProcess> turnAroundTimes = new ArrayList<ScheduledProcess>();
+
+		for (int i = 0; i < completionTimes.size(); i++) {
+			ScheduledProcess scheduledProcess = new ScheduledProcess(allProcesses.get(i).getProcessNumber(),
+					(completionTimes.get(i).getExeTime() - allProcesses.get(i).getArrivingTime()));
+			turnAroundTimes.add(scheduledProcess);
+		}
+		return turnAroundTimes;
+	}
+
+	// WaintingTime = TurnAroundTime - BurstTime
+	public ArrayList<ScheduledProcess> getWaitingTimes(ArrayList<Process> allProcesses,
+			ArrayList<ScheduledProcess> turnAroundTimes) {
+
+		ArrayList<ScheduledProcess> waitingTimes = new ArrayList<ScheduledProcess>();
+
+		for (int i = 0; i < allProcesses.size(); i++) {
+			ScheduledProcess waitingTime = new ScheduledProcess(allProcesses.get(i).getProcessNumber(),
+					(turnAroundTimes.get(i).getExeTime() - allProcesses.get(i).getBurstTime()));
+
+			waitingTimes.add(waitingTime);
+		}
+		return waitingTimes;
+	}
+
 }

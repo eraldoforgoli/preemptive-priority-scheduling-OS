@@ -7,6 +7,13 @@ public class Process {
 	private int arrivingTime;
 	private int burstTime;
 
+	public Process() {
+		this.processNumber = 0;
+		this.processPriority = 0;
+		this.arrivingTime = 0;
+		this.burstTime = 0;
+	}
+
 	public Process(int processNumber, int processPriority, int arrivingTime, int burstTime) {
 		this.processNumber = processNumber;
 		this.processPriority = processPriority;
