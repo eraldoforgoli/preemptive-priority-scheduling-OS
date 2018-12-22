@@ -33,20 +33,20 @@ public class PreemptiveSchedulingController {
 		System.out.println("Pr  AT  BT");
 		for (Process process : allProcesses) {
 			System.out.println(
-					process.getProcessPriority() + "   " + process.getArrivingTime() + "   " + process.getBurstTime());
+			process.getProcessPriority() + "   " + process.getArrivingTime() + "   " + process.getBurstTime());
 		}
 
 		ArrayList<Process> allProcessesCopy = new ArrayList<Process>(allProcesses);
 		scheduledProcesses = preemptiveSchedulingLogic.calculateProcessSchedule(allProcesses);
 
 		System.out.println("Process execution order : ");
-
+		
 		for (ScheduledProcess sp : scheduledProcesses) {
 			System.out.print(sp.getProcessNumber() + "  ");
-
 		}
 
 		System.out.println("\nProcess execution time: ");
+		
 		for (ScheduledProcess sp : scheduledProcesses) {
 			System.out.print("P" + sp.getProcessNumber() + ":  " + sp.getExeTime() + "  ");
 		}
@@ -61,20 +61,18 @@ public class PreemptiveSchedulingController {
 
 		// get Turn Around Time
 		turnAroundTimes = preemptiveSchedulingLogic.getTurnAroundTimes(allProcessesCopy, complitionTimes);
+		
 		System.out.println("Turn Around Times: ");
 		for (ScheduledProcess times : turnAroundTimes) {
 			System.out.println("P" + times.getProcessNumber() + "  " + times.getExeTime() + "  ");
 		}
 
 		// get Waiting Times
-
 		waitingTimes = preemptiveSchedulingLogic.getWaitingTimes(allProcessesCopy, turnAroundTimes);
 
 		System.out.println("Waiting  Times: ");
 		for (ScheduledProcess waitingTime : waitingTimes) {
 			System.out.println("P" + waitingTime.getProcessNumber() + "  " + waitingTime.getExeTime() + "  ");
 		}
-
 	}
-
 }

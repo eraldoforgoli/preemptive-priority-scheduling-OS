@@ -52,5 +52,4 @@ public class Process {
 	public void setBurstTime(int burstTime) {
 		this.burstTime = burstTime;
 	}
-
 }

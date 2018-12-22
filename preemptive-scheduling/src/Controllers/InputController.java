@@ -5,7 +5,7 @@ import java.util.Scanner;
 import Models.Process;
 
 public class InputController {
-
+	
 	private ArrayList<Process> allProcesses;
 	private int processNumber;
 	private int processPriority;
@@ -27,7 +27,6 @@ public class InputController {
 		System.out.println("Start entering your processes: ");
 
 		do {
-
 			System.out.println("Enter the process Priority:  ");
 
 			while (!in.hasNextInt()) {
@@ -52,13 +51,8 @@ public class InputController {
 
 			allProcesses.add(new Process(++processNumber, processPriority, processArrivingTime, processBurstTime));
 			System.out.println("Do You want to finish entering the processes? (y/n)");
-
-		}
-
-		while (!(in.nextLine().equals("Y") || in.nextLine().equals("y")));
+		}while (!(in.nextLine().equals("Y") || in.nextLine().equals("y")));
 
 		return allProcesses;
-
 	}
-
 }

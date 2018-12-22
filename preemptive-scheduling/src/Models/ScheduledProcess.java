@@ -25,5 +25,4 @@ public class ScheduledProcess {
 	public void setExeTime(int exeTime) {
 		this.exeTime = exeTime;
 	}
-
 }

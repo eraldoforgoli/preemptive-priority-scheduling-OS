@@ -24,13 +24,11 @@ public class PreemptiveSchedulingLogic {
 
 		// get the first arriving process
 		Process process = this.getFirstArrivingProcess(allProcesses);
-
 		Process nextProcess = this.getNextProcess(allProcesses, process.getArrivingTime());
 
 		while (allProcesses.size() > 0 && nextProcess != null) {
 
 			nextHigherPriorityProcess = this.getNextHigherPriorityProcess(allProcesses, process);
-
 			exeTime = nextHigherPriorityProcess.getArrivingTime() - currentTime;
 			totatExecutionTime += exeTime;
 
@@ -48,7 +46,6 @@ public class PreemptiveSchedulingLogic {
 				// process = this.getNextProcess(allProcesses, process.getProcessNumber());
 				process = this.getNextProcessAfterCurrentProcess(allProcesses, process.getArrivingTime(),
 						nextHigherPriorityProcess.getArrivingTime());
-
 			} else {
 				process.setBurstTime(process.getBurstTime() - exeTime);
 
@@ -134,7 +131,6 @@ public class PreemptiveSchedulingLogic {
 			allProcesses.remove(maxProcess);
 		}
 		return scheduledProcesses;
-
 	}
 
 	public ArrayList<ScheduledProcess> getCompletionTimes(ArrayList<Process> allProcesses,
@@ -152,7 +148,6 @@ public class PreemptiveSchedulingLogic {
 			scheduledProcessTime.add(sp);
 		}
 		return scheduledProcessTime;
-
 	}
 
 	// TurnAroundTime = CompletionTime - ArrivingTime
@@ -163,7 +158,7 @@ public class PreemptiveSchedulingLogic {
 
 		for (int i = 0; i < completionTimes.size(); i++) {
 			ScheduledProcess scheduledProcess = new ScheduledProcess(allProcesses.get(i).getProcessNumber(),
-					(completionTimes.get(i).getExeTime() - allProcesses.get(i).getArrivingTime()));
+			(completionTimes.get(i).getExeTime() - allProcesses.get(i).getArrivingTime()));
 			turnAroundTimes.add(scheduledProcess);
 		}
 		return turnAroundTimes;
@@ -177,11 +172,10 @@ public class PreemptiveSchedulingLogic {
 
 		for (int i = 0; i < allProcesses.size(); i++) {
 			ScheduledProcess waitingTime = new ScheduledProcess(allProcesses.get(i).getProcessNumber(),
-					(turnAroundTimes.get(i).getExeTime() - allProcesses.get(i).getBurstTime()));
+			(turnAroundTimes.get(i).getExeTime() - allProcesses.get(i).getBurstTime()));
 
 			waitingTimes.add(waitingTime);
 		}
 		return waitingTimes;
 	}
-
 }
