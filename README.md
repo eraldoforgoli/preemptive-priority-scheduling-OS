@@ -12,15 +12,16 @@ The difference between preemptive priority scheduling and non preemptive priorit
 
 Once all the jobs get available in the ready queue, the algorithm will behave as non-preemptive priority scheduling, which means the job scheduled will run till the completion and no preemption will be done.
 
-```
+
 
 ## Usage
 
 git clone https://github.com/eraldoforgoli/preemptive-priority-scheduling-OS
-import project to your workspace
+import project to your workspace  
+Run As Java Application
 
-Application gets the input from command line 
-```
+## Inputs
+Application gets the inputs from command line 
 
 ## Example
 See the example below : https://www.javatpoint.com/os-preemptive-priority-scheduling
