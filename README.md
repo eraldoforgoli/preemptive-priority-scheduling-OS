@@ -16,7 +16,7 @@ Once all the jobs get available in the ready queue, the algorithm will behave as
 
 ## Usage
 
-git clone https://github.com/eraldoforgoli/preemptive-priority-scheduling-OS
+git clone https://github.com/eraldoforgoli/preemptive-priority-scheduling-OS  
 import project to your workspace  
 Run As Java Application
 
