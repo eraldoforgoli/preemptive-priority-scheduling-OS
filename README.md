@@ -22,6 +22,9 @@ import project to your workspace
 Application gets the input from command line 
 ```
 
+## Example
+See the example below : https://www.javatpoint.com/os-preemptive-priority-scheduling
+
 ## Contributing
 Pull requests are welcome. 
 
