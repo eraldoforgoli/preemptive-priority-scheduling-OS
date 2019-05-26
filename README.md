@@ -29,6 +29,3 @@ See the example below : https://www.javatpoint.com/os-preemptive-priority-schedu
 
 ## Contributing
 Pull requests are welcome. 
-
-## License
-MIT
